@@ -1,0 +1,47 @@
+---
+title: number becomes string
+author: Max Czapanskiy
+date: '2021-02-16'
+slug: number-becomes-string
+categories: []
+tags: []
+description: ''
+---
+
+Last week in study hall we ran into an issue where a column in a CSV file that should be numbers becomes text in R. Here's where the error came from and how we fixed it.
+
+![](https://vimeo.com/513059037)
+
+## The problem
+
+The CSV available [here](https://gist.githubusercontent.com/REveningStudyHall/dbbe79f8129292a6ed2a20ddb5aa4be3/raw/e35d7606b398bcfa9202da50acf17b5fb48622a7/number_becomes_string.csv) creates this error. Let's have a look
+
+```{r read_data}
+library(tidyverse)
+csv_path <- "https://gist.githubusercontent.com/REveningStudyHall/dbbe79f8129292a6ed2a20ddb5aa4be3/raw/e35d7606b398bcfa9202da50acf17b5fb48622a7/number_becomes_string.csv"
+foo <- read_csv(csv_path)
+foo
+```
+
+Notice R thinks the fourth column (frustrating_column_i_hate_it) is text, even though it's mostly numbers. The column specification says it's a `col_character()` and when we print the tibble its type is `<chr>`.
+
+## The fix
+
+See that "---" on line 5? That's where the error comes from. Whoever entered this data meant "---" to mean missing data. As humans, looking at this CSV, we can easily interpret that as missing data. But R lacks our intuition. "---" looks like text to `read_csv()` so the whole column has to become text. Let's fix it.
+
+```{r fix_it}
+foo_fixed <- read_csv(csv_path, na = "---")
+foo_fixed
+```
+
+What did we do here? `read_csv()` accepts an argument called `na`, which specifies what should be treated as missing data. By default, that's going to be blanks and "NA" (check the `read_csv()` documentation, it has a lot of good info). By setting `na = "---"` we tell `read_csv()` that "---" should be interpreted as missing data. This is preferable to changing the CSV itself. Raw data is raw data and you should leave it be as much as a you can - editing CSVs by hand is usually a sign something's not right! Fixing it in code is better.
+
+Fixing the column type is a big deal, of course, because we can't run calculations on text!
+
+```{r try_calc}
+# This doesn't work bc text
+mean(foo$frustrating_column_i_hate_it, na.rm = TRUE)
+
+# This works bc numbers
+mean(foo_fixed$frustrating_column_i_hate_it, na.rm = TRUE)
+```

@@ -1,0 +1,87 @@
+---
+title: number becomes string
+author: Max Czapanskiy
+date: '2021-02-16'
+slug: number-becomes-string
+categories: []
+tags: []
+description: ''
+---
+
+
+
+<p>Last week in study hall we ran into an issue where a column in a CSV file that should be numbers becomes text in R. Here’s where the error came from and how we fixed it.</p>
+<p><img src="https://vimeo.com/513059037" /></p>
+<div id="the-problem" class="section level2">
+<h2>The problem</h2>
+<p>The CSV available <a href="https://gist.githubusercontent.com/REveningStudyHall/dbbe79f8129292a6ed2a20ddb5aa4be3/raw/e35d7606b398bcfa9202da50acf17b5fb48622a7/number_becomes_string.csv">here</a> creates this error. Let’s have a look</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.0.5     ✓ dplyr   1.0.3
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>csv_path &lt;- &quot;https://gist.githubusercontent.com/REveningStudyHall/dbbe79f8129292a6ed2a20ddb5aa4be3/raw/e35d7606b398bcfa9202da50acf17b5fb48622a7/number_becomes_string.csv&quot;
+foo &lt;- read_csv(csv_path)</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   column = col_double(),
+##   good_column = col_double(),
+##   great_column = col_double(),
+##   frustrating_column_i_hate_it = col_character()
+## )</code></pre>
+<pre class="r"><code>foo</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   column good_column great_column frustrating_column_i_hate_it
+##    &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;                       
+## 1      1          10          100 1000                        
+## 2      2          20          200 2000                        
+## 3      3          NA          300 3000                        
+## 4      4          40          400 4000                        
+## 5      5          50          500 ---                         
+## 6     NA          60          600 6000                        
+## 7      7          70          700 7000                        
+## 8      8          80           NA 8000                        
+## 9      9          90          900 9000</code></pre>
+<p>Notice R thinks the fourth column (frustrating_column_i_hate_it) is text, even though it’s mostly numbers. The column specification says it’s a <code>col_character()</code> and when we print the tibble its type is <code>&lt;chr&gt;</code>.</p>
+</div>
+<div id="the-fix" class="section level2">
+<h2>The fix</h2>
+<p>See that “—” on line 5? That’s where the error comes from. Whoever entered this data meant “—” to mean missing data. As humans, looking at this CSV, we can easily interpret that as missing data. But R lacks our intuition. “—” looks like text to <code>read_csv()</code> so the whole column has to become text. Let’s fix it.</p>
+<pre class="r"><code>foo_fixed &lt;- read_csv(csv_path, na = &quot;---&quot;)</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   column = col_double(),
+##   good_column = col_double(),
+##   great_column = col_double(),
+##   frustrating_column_i_hate_it = col_double()
+## )</code></pre>
+<pre class="r"><code>foo_fixed</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   column good_column great_column frustrating_column_i_hate_it
+##    &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;                        &lt;dbl&gt;
+## 1      1          10          100                         1000
+## 2      2          20          200                         2000
+## 3      3          NA          300                         3000
+## 4      4          40          400                         4000
+## 5      5          50          500                           NA
+## 6     NA          60          600                         6000
+## 7      7          70          700                         7000
+## 8      8          80           NA                         8000
+## 9      9          90          900                         9000</code></pre>
+<p>What did we do here? <code>read_csv()</code> accepts an argument called <code>na</code>, which specifies what should be treated as missing data. By default, that’s going to be blanks and “NA” (check the <code>read_csv()</code> documentation, it has a lot of good info). By setting <code>na = &quot;---&quot;</code> we tell <code>read_csv()</code> that “—” should be interpreted as missing data. This is preferable to changing the CSV itself. Raw data is raw data and you should leave it be as much as a you can - editing CSVs by hand is usually a sign something’s not right! Fixing it in code is better.</p>
+<p>Fixing the column type is a big deal, of course, because we can’t run calculations on text!</p>
+<pre class="r"><code># This doesn&#39;t work bc text
+mean(foo$frustrating_column_i_hate_it, na.rm = TRUE)</code></pre>
+<pre><code>## Warning in mean.default(foo$frustrating_column_i_hate_it, na.rm = TRUE):
+## argument is not numeric or logical: returning NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code># This works bc numbers
+mean(foo_fixed$frustrating_column_i_hate_it, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 5000</code></pre>
+</div>
