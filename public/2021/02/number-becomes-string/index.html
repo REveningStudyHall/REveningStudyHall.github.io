@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+<meta property="og:title" content="number becomes string" />
+<meta property="og:description" content="Last week in study hall we ran into an issue where a column in a CSV file that should be numbers becomes text in R. Here’s where the error came from and how we fixed it.
+The problem The CSV available here creates this error. Let’s have a look" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.org/2021/02/number-becomes-string/" />
+<meta property="article:published_time" content="2021-02-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-02-16T00:00:00+00:00" />
+
+
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="number becomes string"/>
+<meta name="twitter:description" content="Last week in study hall we ran into an issue where a column in a CSV file that should be numbers becomes text in R. Here’s where the error came from and how we fixed it.
+The problem The CSV available here creates this error. Let’s have a look"/>
+<meta name="generator" content="Hugo 0.80.0" />
+
+
+    
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BlogPosting",
+  "headline": "number becomes string",
+  "url": "https://example.org/2021/02/number-becomes-string/",
+  "wordCount": "558",
+  "datePublished": "2021-02-16T00:00:00+00:00",
+  "dateModified": "2021-02-16T00:00:00+00:00",
+  "author": {
+    "@type": "Person",
+    "name": "Max Czapanskiy"
+  }
+}
+</script>
+
+
+
+    <link rel="canonical" href="https://example.org/2021/02/number-becomes-string/">
+
+    <title>number becomes string | Hugo Bootstrap v4 Blog</title>
+
+    
+    <!-- combined, minified CSS -->
+    
+    <link href="https://example.org/css/style.beb8012edc08ba10be012f079d618dc243812267efe62e11f22fe49618f976a4.css" rel="stylesheet" integrity="sha256-vrgBLtwIuhC&#43;AS8HnWGNwkOBImfv5i4R8i/klhj5dqQ=" crossorigin="anonymous">
+    
+
+    <!-- minified Font Awesome for SVG icons -->
+    
+    <script defer src="https://example.org/js/fontawesome.min.ffbfea088a9a1666ec65c3a8cb4906e2a0e4f92dc70dbbf400a125ad2422123a.js" integrity="sha256-/7/qCIqaFmbsZcOoy0kG4qDk&#43;S3HDbv0AKElrSQiEjo=" crossorigin="anonymous"></script>
+
+    <!-- RSS 2.0 feed -->
+    
+
+    
+
+  </head>
+
+  <body>
+
+    
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="nav blog-nav">
+          <a class="nav-link " href="https://example.org/">Home</a>
+        </nav>
+      </div>
+    </div>
+    
+
+    
+    
+    <header class="blog-header">
+      <div class="container">
+        <h1 class="blog-title" dir="auto"><a href="https://example.org/" rel="home">Hugo Bootstrap v4 Blog</a></h1>
+        <p class="lead blog-description" dir="auto">A simple Hugo theme based on the Bootstrap v4 blog example.</p>
+      </div>
+    </header>
+    
+    
+
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 blog-main">
+
+          
+
+
+<article class="blog-post">
+  <header>
+    <h2 class="blog-post-title" dir="auto"><a href="https://example.org/2021/02/number-becomes-string/">number becomes string</a></h2>
+    <p class="blog-post-meta">
+<time datetime="2021-02-16T00:00:00Z">Tue Feb 16, 2021</time>
+</p>
+  </header>
+  
+
+
+<p>Last week in study hall we ran into an issue where a column in a CSV file that should be numbers becomes text in R. Here’s where the error came from and how we fixed it.</p>
+<p><img src="https://vimeo.com/513059037" /></p>
+<div id="the-problem" class="section level2">
+<h2>The problem</h2>
+<p>The CSV available <a href="https://gist.githubusercontent.com/REveningStudyHall/dbbe79f8129292a6ed2a20ddb5aa4be3/raw/e35d7606b398bcfa9202da50acf17b5fb48622a7/number_becomes_string.csv">here</a> creates this error. Let’s have a look</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+## ✓ tibble  3.0.5     ✓ dplyr   1.0.3
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
+<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>csv_path &lt;- &quot;https://gist.githubusercontent.com/REveningStudyHall/dbbe79f8129292a6ed2a20ddb5aa4be3/raw/e35d7606b398bcfa9202da50acf17b5fb48622a7/number_becomes_string.csv&quot;
+foo &lt;- read_csv(csv_path)</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   column = col_double(),
+##   good_column = col_double(),
+##   great_column = col_double(),
+##   frustrating_column_i_hate_it = col_character()
+## )</code></pre>
+<pre class="r"><code>foo</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   column good_column great_column frustrating_column_i_hate_it
+##    &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;                       
+## 1      1          10          100 1000                        
+## 2      2          20          200 2000                        
+## 3      3          NA          300 3000                        
+## 4      4          40          400 4000                        
+## 5      5          50          500 ---                         
+## 6     NA          60          600 6000                        
+## 7      7          70          700 7000                        
+## 8      8          80           NA 8000                        
+## 9      9          90          900 9000</code></pre>
+<p>Notice R thinks the fourth column (frustrating_column_i_hate_it) is text, even though it’s mostly numbers. The column specification says it’s a <code>col_character()</code> and when we print the tibble its type is <code>&lt;chr&gt;</code>.</p>
+</div>
+<div id="the-fix" class="section level2">
+<h2>The fix</h2>
+<p>See that “—” on line 5? That’s where the error comes from. Whoever entered this data meant “—” to mean missing data. As humans, looking at this CSV, we can easily interpret that as missing data. But R lacks our intuition. “—” looks like text to <code>read_csv()</code> so the whole column has to become text. Let’s fix it.</p>
+<pre class="r"><code>foo_fixed &lt;- read_csv(csv_path, na = &quot;---&quot;)</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   column = col_double(),
+##   good_column = col_double(),
+##   great_column = col_double(),
+##   frustrating_column_i_hate_it = col_double()
+## )</code></pre>
+<pre class="r"><code>foo_fixed</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   column good_column great_column frustrating_column_i_hate_it
+##    &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;                        &lt;dbl&gt;
+## 1      1          10          100                         1000
+## 2      2          20          200                         2000
+## 3      3          NA          300                         3000
+## 4      4          40          400                         4000
+## 5      5          50          500                           NA
+## 6     NA          60          600                         6000
+## 7      7          70          700                         7000
+## 8      8          80           NA                         8000
+## 9      9          90          900                         9000</code></pre>
+<p>What did we do here? <code>read_csv()</code> accepts an argument called <code>na</code>, which specifies what should be treated as missing data. By default, that’s going to be blanks and “NA” (check the <code>read_csv()</code> documentation, it has a lot of good info). By setting <code>na = &quot;---&quot;</code> we tell <code>read_csv()</code> that “—” should be interpreted as missing data. This is preferable to changing the CSV itself. Raw data is raw data and you should leave it be as much as a you can - editing CSVs by hand is usually a sign something’s not right! Fixing it in code is better.</p>
+<p>Fixing the column type is a big deal, of course, because we can’t run calculations on text!</p>
+<pre class="r"><code># This doesn&#39;t work bc text
+mean(foo$frustrating_column_i_hate_it, na.rm = TRUE)</code></pre>
+<pre><code>## Warning in mean.default(foo$frustrating_column_i_hate_it, na.rm = TRUE):
+## argument is not numeric or logical: returning NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code># This works bc numbers
+mean(foo_fixed$frustrating_column_i_hate_it, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 5000</code></pre>
+</div>
+
+
+  
+
+  
+  <hr>
+  <footer>
+
+  
+    <section>
+    <h4>Share</h4>
+    <nav class="nav sharing-icons">
+      <a class="nav-item" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fexample.org%2f2021%2f02%2fnumber-becomes-string%2f" title="Share on Facebook"><span class="fab fa-facebook-f fa-2x" aria-hidden="true"></span></a>
+      <a class="nav-item" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fexample.org%2f2021%2f02%2fnumber-becomes-string%2f" title="Share on LinkedIn"><span class="fab fa-linkedin-in fa-2x" aria-hidden="true"></span></a>
+      <a class="nav-item" href="https://twitter.com/intent/tweet?url=https%3a%2f%2fexample.org%2f2021%2f02%2fnumber-becomes-string%2f&amp;text=number%20becomes%20string" title="Tweet this"><span class="fab fa-twitter fa-2x"></span></a>
+    </nav>
+  </section>
+
+  
+
+  
+  </footer>
+  
+
+</article> 
+
+
+
+        </div> <!-- /.blog-main -->
+
+        <aside class="col-sm-3 ml-auto blog-sidebar">
+  
+  <section class="sidebar-module sidebar-module-inset">
+    <h4>About</h4>
+    <p dir="auto">A simple Hugo theme based on the <a href="http://v4-alpha.getbootstrap.com/examples/blog/">Bootstrap v4 blog example</a>.</p>
+  </section>
+  
+
+  
+        <section class="sidebar-module">
+    <h4>Recent Posts</h4>
+    <ol class="list-unstyled">
+
+
+<li><a href="/2021/02/number-becomes-string/">number becomes string</a></li>
+
+    </ol>
+  </section>
+
+  
+
+  
+  <section class="sidebar-module">
+    <h4>Links</h4>
+    <ol class="list-unstyled">
+      
+      <li><a href="https://example.com">Link 1</a></li>
+      
+      <li><a href="https://example.org">Link 2</a></li>
+      
+    </ol>
+  </section>
+  
+</aside>
+
+
+      </div> <!-- /.row -->
+    </div> <!-- /.container -->
+    
+
+    
+    <footer class="blog-footer">
+      <p dir="auto">
+      
+      Blog template created by <a href="https://twitter.com/mdo">@mdo</a>, ported to Hugo by <a href='https://twitter.com/mralanorth'>@mralanorth</a>.
+      
+      </p>
+      <p>
+      <a href="#">Back to top</a>
+      </p>
+    </footer>
+    
+
+  </body>
+
+</html>
