@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on Hugo Bootstrap v4 Blog</title>
-    <link>https://example.org/categories/</link>
-    <description>Recent content in Categories on Hugo Bootstrap v4 Blog</description>
+    <title>Categories on R Evening Study Hall</title>
+    <link>https://reveningstudyhall.netlify.app/categories/</link>
+    <description>Recent content in Categories on R Evening Study Hall</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://example.org/categories/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="https://reveningstudyhall.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

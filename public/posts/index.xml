@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Hugo Bootstrap v4 Blog</title>
-    <link>https://example.org/posts/</link>
-    <description>Recent content in Posts on Hugo Bootstrap v4 Blog</description>
+    <title>Posts on R Evening Study Hall</title>
+    <link>https://reveningstudyhall.netlify.app/posts/</link>
+    <description>Recent content in Posts on R Evening Study Hall</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 16 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 16 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://reveningstudyhall.netlify.app/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>number becomes string</title>
-      <link>https://example.org/2021/02/number-becomes-string/</link>
+      <link>https://reveningstudyhall.netlify.app/2021/02/number-becomes-string/</link>
       <pubDate>Tue, 16 Feb 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://example.org/2021/02/number-becomes-string/</guid>
+      <guid>https://reveningstudyhall.netlify.app/2021/02/number-becomes-string/</guid>
       <description>Last week in study hall we ran into an issue where a column in a CSV file that should be numbers becomes text in R. Here’s where the error came from and how we fixed it.
 The problem The CSV available here creates this error. Let’s have a look</description>
     </item>
