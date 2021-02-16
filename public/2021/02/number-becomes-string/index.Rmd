@@ -10,7 +10,7 @@ description: ''
 
 Last week in study hall we ran into an issue where a column in a CSV file that should be numbers becomes text in R. Here's where the error came from and how we fixed it.
 
-{{< vimeo 513059037 >}}
+`r htmltools::HTML("{{< vimeo 513059037 >}}")`
 
 ## The problem
 
